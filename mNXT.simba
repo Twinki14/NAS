@@ -1,14 +1,14 @@
 {$Include_Once Windows\Windows.simba}
 
-{$I mNXT\mNXT_Types.simba}
-{$I mNXT\mNXT_Pair.simba}
-{$I mNXT\mNXT_INI.simba}
+{$I mNXT\mNXT_Types.pas}
+{$I mNXT\mNXT_Pair.pas}
+{$I mNXT\mNXT_INI.pas}
 
-{$I mNXT\Input\mNXT_MouseOverrides.simba}
-{$I mNXT\Input\mNXT_Mouse.simba}
+{$I mNXT\Input\mNXT_MouseOverrides.pas}
+{$I mNXT\Input\mNXT_Mouse.pas}
 
-{$I mNXT\Input\mNXT_KeyboardOverrides.simba}
-{$I mNXT\Input\mNXT_Keyboard.simba}
+{$I mNXT\Input\mNXT_KeyboardOverrides.pas}
+{$I mNXT\Input\mNXT_Keyboard.pas}
 
 procedure TmNXT.debug(fString :string; clear:boolean=false);
 begin

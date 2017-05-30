@@ -14,10 +14,6 @@ begin
   KeyUp(key);
 end;
 
-(*
- Credits to @bg5
-*)
-
 procedure SendKeysEx(s: string; keywait: integer);
 Var
   i, z, ls, lsc: Integer;

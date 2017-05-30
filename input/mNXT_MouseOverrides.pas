@@ -7,8 +7,6 @@
 Var
   mNXT_LastX, mNXT_LastY: integer;
 
-
-
 procedure GetMousePos(var x,y: Int32); override
 begin
   x:=mNXT_LastX;
