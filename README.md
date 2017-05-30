@@ -27,11 +27,11 @@ mNXT uses the Win32 API to do everything it does. It uses PostMessage to send fa
 * mNXT_Pair: The Structure of a Paired Client
 * mNXT_Keyboard: Keyboard related functions
 * mNXT_Mouse: Mouse related functions
-* mNXT Debug: Each structure has debug methods, you can enable debug by using mNXT.z_debug;
+* mNXT Debug: Each structure has debug methods, you can enable debug by using mNXT.z_debug:=true, you can disable debug to each individual structure
 
 
 ## Simba Input Function Overrides
-mNXT overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be find in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes.
+mNXT overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be found in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes.
 
 ## Requirements
 * [Simba 1.20](https://github.com/MerlijnWajer/Simba/releases)
