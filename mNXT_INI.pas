@@ -125,14 +125,3 @@ begin
   end;
   self.debug('isPairedWithINI > '+toStr(pair)+' > '+toStr(result));
 end;
-
-procedure TmNXTINI.closeHandles(handles: Array of HANDLE);
-var I:Integer;
-begin
-  for i:=low(handles) to high(handles) do
-  begin
-    Kernel32.CloseHandle(handles[i]);
-    self.debug('Closing Handle > '+toStr(handles[i]));
-  end;
-end;
-
