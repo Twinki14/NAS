@@ -1,0 +1,40 @@
+procedure KeyDown(key: Word); override;
+begin
+  User32.PostMessage(mNXT.getGame(), WM_KEYUP, key, MAKELPARAM(0, 1));
+end;
+
+procedure KeyUp(key: Word); override;
+begin
+  User32.PostMessage(mNXT.getGame(), WM_KEYDOWN, key, MAKELPARAM(1, 0));
+end;
+
+procedure PressKey(key: Word); override;
+begin
+  KeyDown(key);
+  KeyUp(key);
+end;
+
+(*
+  Notes:
+
+  @TODO: Add key modifiers like Shift
+*)
+
+procedure SendKeys(const s: string; keywait, keymodwait: integer); override;
+Var
+  char: Char;
+begin
+  for char in s do
+  begin
+    PressKey(GetKeyCode(char));
+    Wait(keyWait);
+  end;
+end;
+
+(*
+  Notes:
+    Because Simba grabs the keystate system-wide, and mNXT doesn't emulate a keyboard,
+    it's best to simply return false, and assume the key isn't down.
+*)
+function isKeyDown(key: word): boolean; override; begin result:=false end;
+
