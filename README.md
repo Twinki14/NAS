@@ -34,8 +34,8 @@ mNXT uses the Win32 API to do everything it does. It uses PostMessage to send fa
 mNXT overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be find in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes.
 
 ## Requirements
-* [https://github.com/MerlijnWajer/Simba/releases]Simba 1.20
-* [https://github.com/WarPie/Simba-Windows-API]Windows-API Include for Simba 1.20
+* [Simba 1.20](https://github.com/MerlijnWajer/Simba/releases)
+* [Windows-API Include for Simba 1.20](https://github.com/WarPie/Simba-Windows-API)
 
 
 
