@@ -5,13 +5,11 @@
 ## What it does
 * NXT and Simba Client Pairing
 * Send Fake Input to the NXT client with or without focus
-* Disables the ability to Minimize the NXT Client
 * Allows you to use your Host PC while botting
 * Works with SRL-6
 
 
 ## What it doesn't do
-* Allow Minimizing the client
 * Drawing [(Use LibLayer)](https://github.com/Olly-/libLayer)
 * Work on Non-Windows' systems
 
