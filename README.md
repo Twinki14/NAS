@@ -41,7 +41,7 @@ mNXT overrides almost all of Simba's mouse/keyboard functions, like KeyDown, Key
 
 ## Setup
 ### mNXT uses the official NXT Client, so just boot NXT up and start the script. 
-### The NXT Client must be set to **Compatibility Mode** if you want Color-find functions to work! It's normal for the client to lag until it fully loads the shaders
+### The NXT Client must be set to **Compatibility Mode** if you want Color-finding functions to work! It's normal for the client to lag until it fully loads the shaders
 
 ```pascal
 program new;
