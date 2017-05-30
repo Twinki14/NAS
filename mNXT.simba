@@ -117,17 +117,35 @@ end;
 function TmNXT.isTIDActive(TID: DWORD): boolean;
 Var
   eC: DWORD;
+  hndl: HANDLE;
 begin
-  Kernel32.GetExitCodeThread(Kernel32.OpenThread($0040, false, TID), eC);
+  hndl:=Kernel32.OpenThread(THREAD_QUERY_INFORMATION, false, TID);
+  Kernel32.GetExitCodeThread(hndl, eC);
+  Kernel32.CloseHandle(hndl);
   result:=eC=259;
+  self.debug('isTIDActive('+toStr(TID)+') > '+toStr(result)+' > code: '+toStr(eC));
 end;
 
 function TmNXT.isPIDActive(PID: DWORD): boolean;
 Var
   eC: DWORD;
+  hndl: HANDLE;
 begin
- Kernel32.GetExitCodeProcess(Kernel32.OpenProcess($0400, false, PID), eC);
- result:=eC=259;
+  hndl:=Kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, false, PID);
+  Kernel32.GetExitCodeProcess(hndl, eC);
+  Kernel32.CloseHandle(hndl);
+  result:=eC=259;
+  self.debug('isPIDActive('+toStr(PID)+') > '+toStr(result)+' > code: '+toStr(eC));
+end;
+
+procedure TmNXT.closeHandles(handles: Array of HANDLE);
+var I:Integer;
+begin
+  for i:=low(handles) to high(handles) do
+  begin
+    Kernel32.CloseHandle(handles[i]);
+    self.debug('Closing Handle > '+toStr(handles[i]));
+  end;
 end;
 
 function TmNXT.init(mWTitle: WideString='RuneScape'; mWClass: WideString='JagWindow'; gWClass: WideString='JagOpenGLView'; targetProcID: DWORD=0): boolean;

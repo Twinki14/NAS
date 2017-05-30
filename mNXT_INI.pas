@@ -78,25 +78,6 @@ begin
   WriteINI(self.section, toStr(lKey), 'NPID:'+toStr(pair.NXT_ProcID)+'~'+'SPID:'+toStr(pair.Simba_ProcID)+'~STID:'+toStr(pair.Simba_TID)+'~', self.fullPath);
 end;
 
-function TmNXTINI.isTIDActive(TID: DWORD): boolean;
-Var
-  eC: DWORD;
-begin
-  Kernel32.GetExitCodeThread(Kernel32.OpenThread($0040, false, TID), eC);
-  result:=eC=259;
-  self.debug('isTIDActive('+toStr(TID)+') > '+toStr(result)+' > code: '+toStr(eC));
-end;
-
-function TmNXTINI.isPIDActive(PID: DWORD): boolean;
-Var
-  eC: DWORD;
-begin
- Kernel32.GetExitCodeProcess(Kernel32.OpenProcess($0400, false, PID), eC);
- result:=eC=259;
- self.debug('isPIDActive('+toStr(PID)+') > '+toStr(result)+' > code: '+toStr(eC));
-end;
-
-
 procedure TmNXTINI.CleanupINI();
 Var
   i: int32;
@@ -106,15 +87,15 @@ begin
   vA:=parseINIValues();
   for i := low(vA) to high(vA) do
   begin
-    if(self.isTIDActive(vA[i].Simba_TID))=false then
+    if(mNXT.isTIDActive(vA[i].Simba_TID))=false then
       begin
         rs:=true;
       end;
-    if(self.isPIDActive(vA[i].Simba_ProcID))=false then
+    if(mNXT.isPIDActive(vA[i].Simba_ProcID))=false then
       begin
         rs:=true;
       end;
-    if (self.isPIDActive(vA[i].NXT_ProcID))=false then
+    if (mNXT.isPIDActive(vA[i].NXT_ProcID))=false then
       begin
         rs:=true;
       end;
@@ -143,5 +124,15 @@ begin
       break;
   end;
   self.debug('isPairedWithINI > '+toStr(pair)+' > '+toStr(result));
+end;
+
+procedure TmNXTINI.closeHandles(handles: Array of HANDLE);
+var I:Integer;
+begin
+  for i:=low(handles) to high(handles) do
+  begin
+    Kernel32.CloseHandle(handles[i]);
+    self.debug('Closing Handle > '+toStr(handles[i]));
+  end;
 end;
 
