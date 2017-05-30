@@ -12,7 +12,7 @@
 
 ## What it doesn't do
 * Allow Minimizing the client
-* Drawing [Use LibLayer] (https://github.com/Olly-/libLayer)
+* Drawing [Use LibLayer](https://github.com/Olly-/libLayer)
 * Work on Non-Windows' systems
 
 ## Why?
