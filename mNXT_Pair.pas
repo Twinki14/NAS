@@ -17,7 +17,7 @@ begin
   SetLength(ecs, 3);
   SetLength(handles, 3);
   //[0] Simba TID [1] Simba Proc ID [2] NXT ProcID
-  handles[0] := Kernel32.OpenThread(THREAD_QUERY_INFORMATIOn, false, self.Simba_TID);
+  handles[0] := Kernel32.OpenThread(THREAD_QUERY_INFORMATION, false, self.Simba_TID);
   handles[1] := Kernel32.OpenProcess(PROCESS_QUERY_INFORMATION , false, self.Simba_ProcID);
   handles[2] := Kernel32.OpenProcess(PROCESS_QUERY_INFORMATION , false, self.NXT_ProcID);
   Kernel32.GetExitCodeThread(handles[0], ecs[0]);

@@ -148,6 +148,17 @@ begin
   end;
 end;
 
+procedure TmNXT.SendMessage(hwnd: HWND; Msg: UInt32; wPar: WPARAM; lPar: LPARAM);
+var i: integer;
+begin
+  for i:=0 to 10 do
+  begin
+    if(User32.SendMessage(hwnd, Msg, wPar, lPar)=1) then
+      break;
+    inc(i);
+  end;
+end;
+
 function TmNXT.init(mWTitle: WideString='RuneScape'; mWClass: WideString='JagWindow'; gWClass: WideString='JagOpenGLView'; targetProcID: DWORD=0): boolean;
 begin
   self.ini.z_debug := self.z_debug;
@@ -162,5 +173,6 @@ begin
   self.setCurrentPair(self.pair(mWTitle, mWClass, gWclass, targetProcID));
   result:=self.getCurrentPair.paired;
   SetTarget(['', mNXT.getCurrentPair.GameWindow, 0, 0, 0]);
+
   self.debug('init() > '+tostr(result), false);
 end;

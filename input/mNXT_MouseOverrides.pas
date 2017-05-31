@@ -17,7 +17,7 @@ procedure MoveMouse(x, y: Int32); override;
 begin
   mNXT_LastX:=x;
   mNXT_LastY:=y;
-  User32.PostMessage(mNXT.getGame(), WM_MOUSEMOVE, $00000000, MAKELPARAM(x, y));
+  mNXT.sendMessage(mNXT.getGame(), WM_MOUSEMOVE, $00000000, MAKELPARAM(x, y));
 end;
 
 procedure ClickMouse(x, y, clickType: Int32); override;
@@ -29,9 +29,9 @@ begin
   1: clickType := WM_LBUTTONDOWN;
   2: clickType := WM_MBUTTONDOWN;
   end;
-  User32.PostMessage(mNXT.getGame(), clickType, $00000001, MAKELPARAM(x, y)); //Down
+   mNXT.sendMessage(mNXT.getGame(), clickType, $00000001, MAKELPARAM(x, y)); //Down
   sleep(20);
-  User32.PostMessage(mNXT.getGame(), clickType+1, $00000000, MAKELPARAM(x, y)); //Up
+   mNXT.sendMessage(mNXT.getGame(), clickType+1, $00000000, MAKELPARAM(x, y)); //Up
 end;
 
 
@@ -46,7 +46,7 @@ procedure ScrollMouse(x, y: Integer; Clicks: Integer); override
 begin
   mNXT_LastX:=x;
   mNXT_LastY:=y;
-  User32.PostMessage(mNXT.getGame(), $020A, MAKEWPARAM(0, Clicks*120), MAKELPARAM(x, y)); //Down
+   mNXT.sendMessage(mNXT.getGame(), $020A, MAKEWPARAM(0, Clicks*120), MAKELPARAM(x, y)); //Down
 end;
 
 (*
@@ -68,9 +68,9 @@ begin
   1: clickType := WM_LBUTTONDOWN;
   2: clickType := WM_MBUTTONDOWN;
   end;
-  User32.PostMessage(mNXT.getGame(), WM_MOUSEMOVE, $00000000, MAKELPARAM(x, y));
+   mNXT.sendMessage(mNXT.getGame(), WM_MOUSEMOVE, $00000000, MAKELPARAM(x, y));
   sleep(20);
-  User32.PostMessage(mNXT.getGame(), clickType, $00000001, MAKELPARAM(x, y)); //Down
+   mNXT.sendMessage(mNXT.getGame(), clickType, $00000001, MAKELPARAM(x, y)); //Down
 end;
 
 (*
@@ -86,7 +86,7 @@ begin
   1: clickType := WM_LBUTTONDOWN;
   2: clickType := WM_MBUTTONDOWN;
   end;
-  User32.PostMessage(mNXT.getGame(), WM_MOUSEMOVE, $00000000, MAKELPARAM(x, y));
+  mNXT.sendMessage(mNXT.getGame(), WM_MOUSEMOVE, $00000000, MAKELPARAM(x, y));
   sleep(20);
-  User32.PostMessage(mNXT.getGame(), clickType+1, $00000000, MAKELPARAM(x, y)); //Up
+  mNXT.sendMessage(mNXT.getGame(), clickType+1, $00000000, MAKELPARAM(x, y)); //Up
 end;

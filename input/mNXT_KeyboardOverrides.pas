@@ -1,11 +1,11 @@
 procedure KeyDown(key: Word); override;
 begin
-  User32.PostMessage(mNXT.getGame(), WM_KEYDOWN, key, MAKELPARAM(0, 1));
+   User32.PostMessage(mNXT.getGame(), WM_KEYDOWN, key, MAKELPARAM(0, 1));
 end;
 
 procedure KeyUp(key: Word); override;
 begin
-  User32.PostMessage(mNXT.getGame(), WM_KEYUP, key, MAKELPARAM(1, 0));
+   User32.PostMessage(mNXT.getGame(), WM_KEYUP, key, MAKELPARAM(1, 0));
 end;
 
 procedure PressKey(key: Word); override;
@@ -33,7 +33,7 @@ begin
     end;
 
     if( (s[i]=Uppercase(s[i])) or special) then
-      User32.PostMessage(mNXT.getGame(), WM_CHAR, WPARAM(s[i]), MAKELPARAM(1, 0))
+       mNXT.sendMessage(mNXT.getGame(), WM_CHAR, WPARAM(s[i]), MAKELPARAM(1, 0))
     else
       begin
         PressKey(GetKeyCode(s[i]));
