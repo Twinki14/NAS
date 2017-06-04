@@ -1,5 +1,3 @@
-# [Download](https://github.com/Twinki14/Naos/zipball/master)
-
 ## What it does
 * NXT and Simba Client Pairing
 * Send Fake Input to the NXT client with or without focus
