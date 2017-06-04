@@ -1,7 +1,3 @@
-# Naos 
-****An NXT AutOing Solution****
-
-
 ## What it does
 * NXT and Simba Client Pairing
 * Send Fake Input to the NXT client with or without focus
