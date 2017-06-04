@@ -33,7 +33,7 @@ NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyU
 ## Requirements
 * [Simba 1.20](https://github.com/MerlijnWajer/Simba/releases)
 * [Windows-API Include for Simba 1.20](https://github.com/WarPie/Simba-Windows-API)
-* [LibLayer (For Drawing)] (https://github.com/Olly-/libLayer)
+* [LibLayer (For Drawing)](https://github.com/Olly-/libLayer)
 
 
 
