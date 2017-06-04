@@ -1,4 +1,4 @@
-{$loadlib ../Includes/Layer/liblayer.dll}
+{$loadlib LibLayer.dll}
 
 type
   TSimbaLayer = record
