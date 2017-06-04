@@ -52,7 +52,7 @@ end.
 ```
 
 ## Drawing
-### NAS uses [URL="https://github.com/Olly-/libLayer"]LibLayer[/URL] to draw on the paired NXT Game Window.
+### NAS uses [LibLayer](https://github.com/Olly-/libLayer) to draw on the paired NXT Game Window.
 ```pascal
 program new;
 {$DEFINE NAS_DRAWING}
