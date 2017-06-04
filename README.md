@@ -38,8 +38,8 @@ NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyU
 
 
 ## Setup
-### NAS uses the official NXT Client, so just boot NXT up and start the script. 
-### The NXT Client must be set to **Compatibility Mode** if you want Color-finding functions to work! It's normal for the client to lag until it fully loads the shaders
+NAS uses the official NXT Client, so just boot NXT up and start the script. 
+The NXT Client must be set to **Compatibility Mode** if you want Color-finding functions to work! It's normal for the client to lag until it fully loads the shaders
 
 ```pascal
 program new;
@@ -52,7 +52,7 @@ end.
 ```
 
 ## Drawing
-### NAS uses [LibLayer](https://github.com/Olly-/libLayer) to draw on the paired NXT Game Window.
+NAS uses [LibLayer](https://github.com/Olly-/libLayer) to draw on the paired NXT Game Window.
 ```pascal
 program new;
 {$DEFINE NAS_DRAWING}
