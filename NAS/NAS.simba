@@ -1,0 +1,198 @@
+{$Include_Once Windows\winTypes.pas}
+{$Include_Once Windows\winProcess.pas}
+{$Include_Once Windows\winWindow.pas}
+{$Include_Once Windows\winObjects.pas}
+
+{$IFDEF NAS_DRAWING}
+  {$I NAS\NAS_Layer.pas}
+{$ENDIF}
+
+{$I NAS\NAS_Types.pas}
+{$I NAS\NAS_Pair.pas}
+{$I NAS\NAS_INI.pas}
+
+{$I NAS\Input\NAS_MouseOverrides.pas}
+{$I NAS\Input\NAS_Mouse.pas}
+
+{$I NAS\Input\NAS_KeyboardOverrides.pas}
+{$I NAS\Input\NAS_Keyboard.pas}
+
+procedure TNAS.debug(fString :string; force: boolean=false; clear:boolean=false);
+begin
+  if(self.z_debug or force) then
+  begin
+    if clear then
+      ClearDebug();
+    fString:=formatDateTime('tt',time())+' | '+ 'NAS' +' > ' +fString;
+    WriteLn(fString);
+  end;
+end;
+
+
+{ Possible Pairs Start Here }
+type
+  TNAS_PossiblePair = record
+    hwnd: HWND;
+    procID: DWord;
+    title, className: WideString;
+end;
+
+TNAS_PossiblePairs = array of TNAS_PossiblePair;
+
+function TNAS.getPossiblePairs(mWTitle: WideString='RuneScape'; mWClass: WideString='JagWindow'): TNAS_PossiblePairs;
+  function TNAS__EnumWindowsCallback(hwnd: HWND; Param: Pointer): LongBool; static;
+    Var
+      Res:^TNAS_PossiblePairs := Param;
+      i:Int32;
+  begin
+    i := Length(Res^);
+    SetLength(Res^, i+1);
+    Res^[i].hwnd := hwnd;
+    User32.GetWindowThreadProcessId(hwnd, Res^[i].procID);
+    Res^[i].title := User32.GetWindowText(hwnd);
+    Res^[i].className := User32.GetClassName(hwnd);
+    result:=true;
+  end;
+
+var
+i: integer;
+pP: TNAS_PossiblePairs;
+begin
+  Windows.EnumWindows(@TNAS__EnumWindowsCallback, @pP);
+  for i:= low(pP) to high(pP) do
+  begin
+    if((User32.GetWindowText(pP[i].hwnd)=mWTitle) and (User32.GetClassName(pP[i].hwnd)=mWClass)) then
+      begin
+        SetLength(result, length(result)+1);
+        result[length(result)-1] := pP[i];
+      end;
+  end;
+  self.debug('getPossiblePairs('+toStr(mWTitle)+', '+toStr(mWClass)+') > '+toStr(result));
+end;
+
+{ Possible Pairs End Here }
+
+procedure TNAS.setCurrentPair(newPair: TNASPair); begin self.currentPair := newPair end;
+function TNAS.getCurrentPair(): TNASPair; begin result := self.currentPair; end;
+function TNAS.getGameClient(): HWND; begin result:=self.getCurrentPair().gameWindow; end;
+function TNAS.getMainWindow(): HWND; begin result:=self.getCurrentPair().mainWindow; end;
+
+function TNAS.pair(mWTitle: WideString='RuneScape'; mWClass: WideString='JagWindow'; gWClass: WideString='JagOpenGLView'; targetPID: DWORD=0): TNASPair;
+Var
+  ca: tRect;
+  i: int32;
+  pP: TNAS_PossiblePairs;
+  dwStyle: LongInt;
+begin
+  if(self._ini.name='') then
+    self._ini.DeclareINI();
+
+  self._ini.CleanupINI();
+
+  pP := self.getPossiblePairs(mWTitle, mWClass);
+  if(length(pP)<>0) then
+  begin
+    for i := low(pP) to high(pP) do
+    begin
+      result.mainWindow := pP[i].hwnd;
+      result.gameWindow :=  User32.FindWindowEx(result.mainWindow, 0, gWClass, '');
+      if(result.gameWindow<>0) then
+        begin
+          result.z_debug := self.z_debug;
+          User32.GetClientRect(result.gameWindow, ca);
+          User32.GetWindowThreadProcessId(result.mainWindow, result.NXT_PID);
+          if(not(targetPID=0) and not(result.NXT_PID=targetPID)) then
+          begin
+            self.debug('pair() > targetPID: '+toStr(targetPID)+' = NXT_PID: '+toStr(result.NXT_PID)+' > '+toStr(result.NXT_PID=targetPID)+' > Continuing');
+            continue;
+          end;
+          result.Simba_PID := Kernel32.GetCurrentProcessId;
+          result.Simba_TID := Kernel32.GetCurrentThreadId;
+          result.bounds := IntToBox(ca.left, ca.top, ca.right, ca.bottom);
+          result.paired := result.isActive and (not(self._ini.isPairedWithINI(result)));
+
+          if(result.paired) then
+          begin
+            User32.SetWindowLong(result.mainWindow, (-16), 382533632);
+            self._ini.WritePairToINI(result);
+            if(targetPID=0) then
+              self.debug('pair('+toStr(mWTitle)+', '+toStr(mWClass)+', '+toStr(gWClass)+') > '+toStr(result))
+            else
+              self.debug('pair('+toStr(mWTitle)+', '+toStr(mWClass)+', '+toStr(gWClass)+', '+toStr(targetPID)+') > '+toStr(result));
+            exit(result);
+          end else
+            continue;
+        end else
+          self.debug('pair() ERROR > '+' GameWindow not found')
+    end;
+  end else
+    self.debug('pair() ERROR > '+' Could not find any possible pairs')
+end;
+
+procedure TNAS.CloseHandle(handle: HANDLE);
+var I:Integer;
+begin
+  Kernel32.CloseHandle(handle);
+  self.debug('Closing Handle > '+toStr(handle));
+end;
+
+procedure TNAS.CloseHandles(handles: Array of HANDLE);
+var I:Integer;
+begin
+  for i:=low(handles) to high(handles) do
+    self.CloseHandle(handles[i]);
+end;
+
+function TNAS.isTIDActive(TID: DWORD): boolean;
+Var
+  eC: DWORD;
+  hndl: HANDLE;
+begin
+  hndl:=Kernel32.OpenThread(THREAD_QUERY_INFORMATION, false, TID);
+  Kernel32.GetExitCodeThread(hndl, eC);
+  self.CloseHandle(hndl);
+  result:=eC=259;
+  self.debug('isTIDActive('+toStr(TID)+') > '+toStr(result)+' > code: '+toStr(eC));
+end;
+
+function TNAS.isPIDActive(PID: DWORD): boolean;
+Var
+  eC: DWORD;
+  hndl: HANDLE;
+begin
+  hndl:=Kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, false, PID);
+  Kernel32.GetExitCodeProcess(hndl, eC);
+  self.CloseHandle(hndl);
+  result:=eC=259;
+  self.debug('isPIDActive('+toStr(PID)+') > '+toStr(result)+' > code: '+toStr(eC));
+end;
+
+procedure TNAS.EnableDebug(en: boolean=true); begin self.z_debug:=en; end;
+procedure TNAS.DisableDebug(en: boolean=false); begin self.z_debug:=en; end;
+
+function TNAS.init(mWTitle: WideString='RuneScape'; mWClass: WideString='JagWindow'; gWClass: WideString='JagOpenGLView'; targetProcID: DWORD=0): boolean;
+begin
+  self._ini.z_debug := self.z_debug;
+  self.mouse.z_debug := self.z_debug;
+  self.keyboard.z_debug := self.z_debug;
+
+  if(self._ini.name='') then
+    self._ini.DeclareINI();
+
+  self.setCurrentPair(self.pair(mWTitle, mWClass, gWclass, targetProcID));
+  result:=self.getCurrentPair.paired;
+  self.debug('init() > '+tostr(result), false);
+
+  if(result) then
+  begin
+    SetTarget(['', self.getCurrentPair.GameWindow, self.getCurrentPair.NXT_PID, self.getCurrentPair.bounds.X2, self.getCurrentPair.bounds.Y2]);
+    {$IFDEF NAS_DRAWING}
+    _InitTNASLayer();
+    self.Layer:=NAS_Layer;
+    self.Drawing:=NAS_Layer.Bitmap;
+    self.debug('Drawing > Initiated');
+    {$ENDIF}
+  end
+  else
+    self.debug('ERROR > Could not create Pair with NXT Client! Enable Debug (NAS.EnableDebug()) for further details', true);
+end;
