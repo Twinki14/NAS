@@ -24,7 +24,7 @@ The NXT Game Window will continue to run in the background, though you may not b
 * NAS_Pair: The Structure of a Paired Client
 * NAS_Keyboard: Keyboard related functions
 * NAS_Mouse: Mouse related functions
-* NAS Debug: Each structure has debug methods, you can enable debug by using ```pascal NAS.EnableDebug()``` or ```pascal NAS.DisableDebug()```, you can disable debug to each individual structure
+* NAS Debug: Each structure has debug methods, you can enable debug by using ```NAS.EnableDebug()``` or ```NAS.DisableDebug()```, you can disable debug to each individual structure
 
 
 ## Simba Input Function Overrides
