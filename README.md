@@ -37,7 +37,7 @@ Naos overrides almost all of Simba's mouse/keyboard functions, like KeyDown, Key
 ## Requirements
 * [Simba 1.20](https://github.com/MerlijnWajer/Simba/releases)
 * [Windows-API Include for Simba 1.20](https://github.com/WarPie/Simba-Windows-API)
-* [LibLayer (For Drawing)] (https://github.com/Olly-/libLayer)
+* [LibLayer (For Drawing)](https://github.com/Olly-/libLayer)
 
 
 
@@ -56,7 +56,7 @@ end.
 ```
 
 ## Drawing
-### Naos uses [URL="https://github.com/Olly-/libLayer"]LibLayer[/URL] to draw on the paired NXT Game Window.
+### Naos uses [LibLayer](https://github.com/Olly-/libLayer) to draw on the paired NXT Game Window.
 ```pascal
 program new;
 {$DEFINE NAOS_DRAWING}
@@ -69,7 +69,8 @@ begin
 
   if(Naos.init()) then
   begin
-    Naos.Layer.AutoPaint(100); // Layer supports auto-painting, or you can manually tell it to paint with Naos.Layer.Paint();
+    Naos.Layer.AutoPaint(100); 
+    // Layer supports auto-painting, or you can manually tell it to paint with Naos.Layer.Paint();
     Naos.Drawing.DrawText('Clarity is bae', 'SmallChars07', Point(100, 100), false, 255);
   end;
 
