@@ -7,7 +7,7 @@
 * Send Fake Input to the NXT client with or without focus
 * Allows you to use your Host PC while botting
 * Works with SRL-6
-* Drawing [(Use LibLayer)](https://github.com/Olly-/libLayer)
+* Drawing [(LibLayer)](https://github.com/Olly-/libLayer)
 
 
 ## What it doesn't do
