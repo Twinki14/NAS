@@ -11,6 +11,7 @@ end;
 procedure PressKey(key: Word); override;
 begin
   KeyDown(key);
+  sleep(50);
   KeyUp(key);
 end;
 
@@ -20,28 +21,28 @@ Var
   sC: String;
   special: boolean;
 begin
-   sc:='!@#$%^&*()-_=+[{]}\|;:",<.>/?~`';
-   ls := length(s);
-   lsc := length(sc);
-   for i:=1 to ls do
-   begin
+  sc:='!@#$%^&*()-_=+[{]}\|;:",<.>/?~`';
+  ls := length(s);
+  lsc := length(sc);
+  for i:=1 to ls do
+    begin
 
     for z:=1 to lsc do
-    begin
-      if(s[i]=sc[z]) then
-        special:=true;
-    end;
-
-    if( (s[i]=Uppercase(s[i])) or special) then
-       User32.PostMessage(NAS.getGameClient(), WM_CHAR, WPARAM(s[i]), MAKELPARAM(1, 0))
-    else
       begin
-        PressKey(GetKeyCode(s[i]));
+        if(s[i]=sc[z]) then
+          special:=true;
       end;
 
-    sleep(keywait);
+    if((not (s[i] in ['0'..'9'])) and ((s[i]=Uppercase(s[i])) or special)) then
+         User32.PostMessage(NAS.getGameClient(), WM_CHAR, WPARAM(s[i]), MAKELPARAM(1, 0))
+      else
+        begin
+          PressKey(GetKeyCode(s[i]));
+        end;
+
+      sleep(keywait);
     end;
-end;
+end;   
 
 procedure SendKeys(const s: string; keywait, keymodwait: integer); override;
 begin SendKeysEx(s, keywait); end;
