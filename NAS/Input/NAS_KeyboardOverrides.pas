@@ -1,6 +1,6 @@
 procedure KeyDown(key: Word); override;
 begin
-   User32.PostMessage(NAS.getGameClient(), WM_KEYDOWN, key, MAKELPARAM(0, 1));
+   User32.PostMessage(NAS.getGameClient(), WM_KEYDOWN, key, MAKELPARAM(0, 0));
 end;
 
 procedure KeyUp(key: Word); override;
