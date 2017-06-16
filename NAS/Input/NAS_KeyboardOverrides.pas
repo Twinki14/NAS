@@ -49,7 +49,7 @@ begin SendKeysEx(s, keywait); end;
 
 (*
   Notes:
-    Because Simba grabs the keystate system-wide, and mNXT doesn't emulate a keyboard,
+    Because Simba grabs the keystate system-wide, and NAS doesn't emulate a keyboard,
     it's best to simply return false, and assume the key isn't down.
 *)
 function isKeyDown(key: word): boolean; override; begin result:=false end;
