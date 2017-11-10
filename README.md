@@ -67,7 +67,7 @@ begin
 
   if(NAS.init()) then
   begin
-    NAS.Layer.AutoPaint(100); 
+    NAS.Layer.PaintInterval(100); 
     // Layer supports auto-painting, or you can manually tell it to paint with NAS.Layer.Paint();
     NAS.Drawing.DrawText('Clarity is bae', 'SmallChars07', Point(100, 100), false, 255);
   end;

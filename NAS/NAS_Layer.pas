@@ -1,69 +1,90 @@
-{$loadlib LibLayer.dll}
-
-type
-  TSimbaLayer = record
-    InternalLayer: TLayer;
-    Bitmap: TMufasaBitmap;
-end;
+{$loadlib liblayer.dll}
 
 var
-  NAS_Layer: TSimbaLayer;
+  NAS_LAYER: TLayer;
 
-procedure TSimbaLayer.Paint;
+
+var
+  __SyncInfo: record
+    Window: ^TWindowLayer;
+    Handle: PtrUInt;
+    Thread: PtrUInt;
+  end;
+
+  __Layers: array of TLayer;
+
+procedure __AddLayer(Layer: TLayer);
 begin
-  NAS_Layer.InternalLayer.Paint();
+  __Layers += Layer;
 end;
 
-procedure TSimbaLayer.AutoPaint(Interval: Int32);
+procedure __FreeLayers;
+var
+  i: Int32;
 begin
-  NAS_Layer.InternalLayer.PaintInterval(Interval);
+  for i := 0 to High(__Layers) do
+    if (__Layers[i].Window <> nil) or (__Layers[i].Bitmap <> nil) then
+      __Layers[i].Free();
 end;
 
-{$IFDECL TSyncMethod}
-type
-  _TLayerClickEvent = procedure(X, Y: Int32; var Block: Boolean);
-  TLayerClickEvent = native(_TLayerClickEvent, FFI_CDECL);
-
-procedure TSimbaLayer.OnClick(Proc: TLayerClickEvent);
+procedure __SyncLayer;
 begin
-  NAS_Layer.InternalLayer.OnClick(Proc);
+  __SyncInfo.Window^.Init(__SyncInfo.Handle, __SyncInfo.Thread);
 end;
 
-procedure _InitSimbaLayer;
+function TLayer.Create(Handle: PtrUInt = GetNativeWindow): TLayer; static;
 begin
-  NAS_Layer.InternalLayer.Init(Client.GetIOManager().GetImageTarget().GetHandle());
-end;
-{$ELSE}
-type
-  TLayerClickEvent = procedure(X, Y: Int32; var Block: Boolean);
+  __SyncInfo.Window := @Result.Window;
+  __SyncInfo.Handle := Handle;
+  __SyncInfo.Thread := GetCurrThreadID();
 
-procedure TSimbaLayer.OnClick(Proc: TLayerClickEvent);
-begin
-  NAS_Layer.InternalLayer.OnClick(Natify(@Proc));
-end;
+  Sync(@__SyncLayer);
 
-procedure _InitSimbaLayer; Native;
-begin
-  NAS_Layer.InternalLayer.Init(Client.GetIOManager().GetImageTarget().GetHandle());
-end;
-{$ENDIF}
+  Result.Bitmap.Init(Client.GetMBitmaps());
+  Result.Bitmap.SetPersistentMemory(PtrUInt(Result.Window.Data), Result.Window.Width, Result.Window.Height);
 
-procedure _FreeSimbaLayer;
-begin
-  NAS_Layer.InternalLayer.Free();
-  NAS_Layer.Bitmap.Free();
+  __AddLayer(Result);
 end;
 
-procedure _InitTNASLayer();
+procedure TLayer.Free;
+var
+  i: Int32;
 begin
-  {$IFDECL TSyncMethod}
-    Sync(@_InitSimbaLayer);
-  {$ELSE}
-    Sync(_InitSimbaLayer);
-  {$ENDIF}
+  if (Self.Window <> nil) then
+    Self.Window.Free();
+  if (Self.Bitmap <> nil) then
+    Self.Bitmap.Free();
 
-  NAS_Layer.Bitmap.Init(Client.GetMBitmaps());
-  NAS_Layer.Bitmap.SetPersistentMemory(PtrUInt(NAS_Layer.InternalLayer.Data), NAS_Layer.InternalLayer.Width, NAS_Layer.InternalLayer.Height);
+  for i := 0 to High(__Layers) do
+    if (__Layers[i].Window = Self.Window) or (__Layers[i].Bitmap = Self.Bitmap) then
+      __Layers[i] := [nil, nil];
+end;
 
-  AddOnTerminate('_FreeSimbaLayer');
+procedure TLayer.Paint;
+begin
+  Self.Window.Paint();
+end;
+
+procedure TLayer.OnClick(Method: TLayerClickEvent);
+begin
+  Self.Window.OnClick(Method);
+end;
+
+procedure TLayer.PaintInterval(Interval: Int32);
+begin
+  Self.Window.PaintInterval(Interval);
+end;
+
+function TLayer.Width: Int32;
+begin
+  Result := Self.Window.Width;
+end;
+
+function TLayer.Height: Int32;
+begin
+  Result := Self.Window.Height;
+end;
+
+begin
+  AddOnTerminate('__FreeLayers');
 end;
