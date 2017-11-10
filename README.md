@@ -53,7 +53,7 @@ end.
 ```
 
 ## Drawing
-NAS uses [LibLayer](https://github.com/Olly-/libLayer) to draw on the paired NXT Game Window.
+NAS uses [LibLayer](https://github.com/Olly-/libLayer/tree/1.2) (Be sure to use the 1.2 branch) to draw on the paired NXT Game Window.
 Make sure to have LibLayer.dll inside the Simba Plugins Folder.
 ```pascal
 program new;
