@@ -32,7 +32,7 @@ type TNAS = record
   Mouse: TNASMouse;
   Keyboard: TNASKeyboard;
   {$IFDEF NAS_DRAWING}
-    Layer: TSimbaLayer;
+    Layer: TLayer;
     Drawing: TMufasaBitmap;
   {$ENDIF}
   z_debug: boolean;
