@@ -187,8 +187,8 @@ begin
   begin
     SetTarget(['', self.getCurrentPair.GameWindow, self.getCurrentPair.NXT_PID, self.getCurrentPair.bounds.X2, self.getCurrentPair.bounds.Y2]);
     {$IFDEF NAS_DRAWING}
-    self.Layer = TLayer.Create(self.getCurrentPair.GameWindow);
-    self.Drawing:=NAS_Layer.Bitmap;
+    self.Layer:=TLayer.Create(self.getCurrentPair.GameWindow);
+    self.Drawing:=self.Layer.Bitmap;
     self.debug('Drawing > Initiated');
     {$ENDIF}
   end

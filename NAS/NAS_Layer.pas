@@ -1,10 +1,6 @@
 {$loadlib liblayer.dll}
 
 var
-  NAS_LAYER: TLayer;
-
-
-var
   __SyncInfo: record
     Window: ^TWindowLayer;
     Handle: PtrUInt;
