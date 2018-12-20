@@ -30,11 +30,7 @@ The NXT Game Window will continue to run in the background, though you may not b
 ## Simba Input Function Overrides
 NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be found in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes.
 
-## Requirements
-* [Simba 1.20](https://github.com/MerlijnWajer/Simba/releases)
-* [Windows-API Include for Simba 1.20](https://github.com/WarPie/Simba-Windows-API)
-* [LibLayer for Simba 1.20 (For Drawing)](https://github.com/Olly-/libLayer/tree/1.2)
-
+## Requires [Simba 1.3+ - Simba.i386-win32.exe](https://github.com/MerlijnWajer/Simba/releases)
 
 
 ## Setup
@@ -53,8 +49,8 @@ end.
 ```
 
 ## Drawing
-NAS uses [LibLayer](https://github.com/Olly-/libLayer/tree/1.2) (Be sure to use the 1.2 branch) to draw on the paired NXT Game Window.
-Make sure to have LibLayer.dll inside the Simba Plugins Folder.
+NAS uses [LibLayer](https://github.com/Olly-/libLayer/tree/1.2) to draw on the paired NXT Game Window.
+LibLayer now comes with NAS.
 ```pascal
 program new;
 {$DEFINE NAS_DRAWING}
