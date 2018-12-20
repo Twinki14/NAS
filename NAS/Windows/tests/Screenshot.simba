@@ -1,0 +1,41 @@
+program new;
+{$I Windows/Windows.simba}
+
+function Screenshot(Window: HWND; B:TBox): TMufasaBitmap;
+var
+  W,H:Int32;
+  winDc,cdc:HDC;
+  bmp:HBitmap;
+begin
+  W := B.x2-B.x1+1;
+  H := B.y2-B.y1+1;
+
+  winDC := Windows.GetWindowDC(window);
+  cDC := Windows.CreateCompatibleDC(winDC);
+  bmp := Windows.CreateCompatibleBitmap(winDC, W,H);
+  try
+    Windows.SelectObject(cDC, bmp);
+    Windows.BitBlt(cDC, 0,0, W,H, winDC, B.x1,B.y1, SRCCOPY);
+
+    Result.Init(client.GetMBitmaps);
+    Result.SetSize(W,H);
+
+    Windows.GetBitmapBits(bmp, W*H*SizeOf(TRGB32), Result.GetData());
+  finally
+    Windows.DeleteObject(Windows.SelectObject(cDC, bmp));
+    Windows.DeleteDC(cDC);
+    Windows.ReleaseDC(window, winDC);
+  end;
+end;
+
+var
+  bmp:TMufasaBitmap;
+begin
+  bmp := Screenshot(GetClientHandle(), [0,0,500,500]);
+
+  DisplayDebugImgWindow(bmp.GetWidth,bmp.GetHeight);
+  DrawBitmapDebugImg(bmp.GetIndex());
+
+  bmp.Free();
+end.
+

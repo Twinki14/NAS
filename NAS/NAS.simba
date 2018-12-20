@@ -1,7 +1,7 @@
-{$Include_Once Windows\winTypes.pas}
-{$Include_Once Windows\winProcess.pas}
-{$Include_Once Windows\winWindow.pas}
-{$Include_Once Windows\winObjects.pas}
+{$Include_Once NAS\Windows\winTypes.pas}
+{$Include_Once NAS\Windows\winProcess.pas}
+{$Include_Once NAS\Windows\winWindow.pas}
+{$Include_Once NAS\Windows\winObjects.pas}
 
 {$IFDEF NAS_DRAWING}
   {$I NAS\NAS_Layer.pas}

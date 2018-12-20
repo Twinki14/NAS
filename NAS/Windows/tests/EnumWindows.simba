@@ -1,0 +1,63 @@
+program new;
+{$I Windows/Windows.simba}
+
+type
+  TSysProcEx = record
+    Handle: HWND;
+    PID: DWord;
+    Bounds: TRect;
+    Title: WideString;
+  end;
+  TSysProcExArr = array of TSysProcEx;
+
+function IsVisibleOnDesktop(handle: HWND): Boolean;
+var
+  style: LongInt;
+  TARGET_WS := (WS_BORDER or WS_VISIBLE);
+begin
+  style := User32.GetWindowLong(handle, GWL_STYLE);
+  Result := (style and TARGET_WS = TARGET_WS) and (not User32.IsIconic(handle));
+end;
+
+function GetVisibleWindows(): TSysProcExArr;
+  function EnumProcess(Handle: HWND; Param: Pointer): LongBool; static;
+  var
+    Res:^TSysProcExArr := Param;
+    i:Int32;
+  begin
+    if IsVisibleOnDesktop(Handle) then
+    begin
+      i := Length(Res^);
+      SetLength(Res^, i+1);
+      Res^[i].Handle := Handle;
+      Res^[i].Bounds := User32.GetWindowRect(Handle);
+      User32.GetWindowThreadProcessId(Handle, Res^[i].PID);
+      Res^[i].Title := User32.GetWindowText(Handle);
+    end;
+    Result := True;
+  end;
+begin
+  Windows.EnumWindows(@EnumProcess, @Result);
+end;
+
+
+function ToString(x:TSysProcEx): String; override;
+begin
+  Result := '[';
+  Result += '$'+IntToHex(x.Handle,8) + ', ' + Format('%.6d',[x.PID]) + ', ';
+  Result += #39 + x.Title + #39+', ';
+  Result += '(';
+  Result += ToStr(x.Bounds.Left) + ', ' + ToStr(x.Bounds.Top) + ', '
+         +  ToStr(x.Bounds.Right) + ', '+ ToStr(x.Bounds.Bottom) + ')';
+  Result += ']';
+end;
+
+var
+  proc:TSysProcEx;
+begin
+  for proc in GetVisibleWindows() do
+    WriteLn(proc);
+end.
+
+
+

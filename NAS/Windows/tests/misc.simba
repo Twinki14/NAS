@@ -1,0 +1,15 @@
+program new;
+{$I Windows/Windows.simba}
+
+begin
+  WriteLn Windows.GetUserName();
+  WriteLn Windows.GetComputerName();
+  WriteLn Windows.GetSystemDirectory();
+  WriteLn Windows.GetSystemWindowsDirectory();
+  WriteLn Windows.GetWindowsDirectory();
+  WriteLn Windows.GetCurrentThreadId();
+  WriteLn Windows.GetCurrentThread();
+  WriteLn Windows.GetCurrentProcessId();
+  WriteLn Windows.GetCurrentProcess();
+end.
+

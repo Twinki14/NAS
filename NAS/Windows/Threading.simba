@@ -1,0 +1,184 @@
+// Simple threading utilities for lape on Windows.
+// Could contain mistakes on my part, it's not well tested..
+{$include_once Windows/Windows.simba}
+
+type
+  TLapeThreadProc = LPTHREAD_START_ROUTINE;
+  TLapeThread = ^_TLapeThreadRec;
+  _TLapeThreadRec = record
+    FHandle: HANDLE;
+    FThreadID: DWORD;
+    FMethod: TLapeThreadProc;
+    FArgs: Pointer;
+  end;
+
+
+  TLapeTimerProc = procedure();
+  TLapeTimer = ^_TLapeTimerRec;
+  _TLapeTimerRec = record
+    FHandle: HANDLE;
+    FThreadID: DWORD;
+    FOnTimer: TLapeTimerProc;
+    FInterval: Int32;
+    FEnabled: Boolean;
+  end;
+
+
+// -----------------------------------------------------------------------------
+// Simple lape threading
+//
+function TLapeThread.Create(Method: TLapeThreadProc; Args: Pointer): TLapeThread; static;
+begin
+  Result := AllocMem(SizeOf(_TLapeThreadRec));
+  Result^.FArgs   := Args;
+  Result^.FMethod := Method;
+  Result^.FHandle := Windows.CreateThread(nil, 0, Result^.FMethod, Result^.FArgs, CREATE_SUSPENDED, @Result^.FThreadID);
+end;
+
+procedure TLapeThread.WaitFree(maxWait:UInt32 = WINFINITE; ForceTerminate:Boolean=False);
+begin
+  Windows.WaitForSingleObject(Self^.FHandle, maxWait);
+  Self.Free(ForceTerminate);
+end;
+
+procedure TLapeThread.Free(ForceTerminate:Boolean=False);
+var exitCode: DWORD;
+begin
+  Windows.GetExitCodeThread(Self^.FHandle, exitCode);
+  if exitCode = STILL_ACTIVE then
+    if ForceTerminate then
+      Windows.TerminateThread(Self^.FHandle, 0)
+    else
+      raise Format('Thread (%d) is still running', [Self^.FHandle]);
+
+  Windows.CloseHandle(Self^.FHandle);
+  FreeMem(Self);
+  Self := nil;
+end;
+
+procedure TLapeThread.Execute(); constref;
+begin
+  Assert(self <> nil);
+  Windows.ResumeThread(Self^.FHandle);
+end;
+
+procedure TLapeThread.Suspend(); constref;
+begin
+  Assert(self <> nil);
+  Windows.SuspendThread(Self^.FHandle);
+end;
+
+procedure TLapeThread.Resume(); constref;
+begin
+  Assert(self <> nil);
+  Windows.ResumeThread(Self^.FHandle);
+end;
+
+function TLapeThread.Handle(): HANDLE;
+begin
+  Assert(self <> nil);
+  Result := Self^.FHandle;
+end;
+
+function TLapeThread.ThreadID(): DWORD;
+begin
+  Assert(self <> nil);
+  Result := Self^.FThreadID;
+end;
+
+
+
+// -----------------------------------------------------------------------------
+// Simple lape timer - Note that it will not create overlapping threads!
+// Interval is just the minimum time between execution of the timer-method.
+function TLapeTimer.Create(OnTimer: TLapeTimerProc; Interval:Int32): TLapeTimer; static;
+begin
+  Result := AllocMem(SizeOf(_TLapeTimerRec));
+  Result^.FOnTimer  := @OnTimer;
+  Result^.FInterval := Interval;
+  Result^.FEnabled  := True;
+  Result^.FHandle   := Windows.CreateThread(nil, 0, TLapeTimer.TimerProc, Result, CREATE_SUSPENDED, @Result^.FThreadID);
+end;
+
+procedure TLapeTimer.Terminate();
+begin
+  Assert(self <> nil);
+  Self^.FEnabled  := False;
+  Windows.WaitForSingleObject(Self^.FHandle, WINFINITE);
+  Windows.CloseHandle(Self^.FHandle);
+  FreeMem(Self);
+  Self := nil;
+end;
+
+procedure TLapeTimer.Start();
+begin
+  Assert(self <> nil);
+  Windows.ResumeThread(Self^.FHandle);
+end;
+
+procedure TLapeTimer.Pause();
+begin
+  Assert(self <> nil);
+  Windows.SuspendThread(Self^.FHandle);
+end;
+
+function TLapeTimer.Handle(): HANDLE;
+begin
+  Assert(self <> nil);
+  Result := Self^.FHandle;
+end;
+
+function TLapeTimer.ThreadID(): DWORD;
+begin
+  Assert(self <> nil);
+  Result := Self^.FThreadID;
+end;
+
+function TLapeTimer.GetInterval(): Int32;
+begin
+  Assert(self <> nil);
+  Result := Self^.FInterval;
+end;
+
+procedure TLapeTimer.SetInterval(Value: Int32);
+begin
+  Assert(self <> nil);
+  Self^.FInterval := Value;
+end;
+
+procedure TLapeTimer.SetOnTimer(OnTimer: TLapeTimerProc);
+begin
+  Assert(self <> nil);
+  Self^.FOnTimer := @OnTimer;
+end;
+
+function TLapeTimer.GetOnTimer(): TLapeTimerProc;
+begin
+  Assert(self <> nil);
+  Result := @Self^.FOnTimer;
+end;
+
+procedure TLapeTimer.TimerProc(argz:Pointer); static;
+var
+  t: TDateTime;
+  sleepFor: Int32;
+begin
+  while TLapeTimer(argz)^.FEnabled do
+  begin
+    t := Now();
+    TLapeTimer(argz)^.FOnTimer();
+    sleepFor := TLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
+    
+    while (sleepFor > 0) and (TLapeTimer(argz)^.FEnabled) do
+    begin
+      Sleep(Min(sleepFor, 100));
+      sleepFor := TLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
+    end;
+  end;
+end;
+
+
+{$IFDEF THREADED_MML}
+{$include_once threading/mml.pas}
+{$ENDIF}
+

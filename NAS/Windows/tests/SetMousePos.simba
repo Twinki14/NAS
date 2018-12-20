@@ -1,0 +1,8 @@
+program new;
+{$I Windows/Windows.simba}
+
+begin
+  User32.SetCursorPos(500,500);
+  WriteLn User32.GetCursorPos();
+end.
+

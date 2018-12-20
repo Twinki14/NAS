@@ -1,0 +1,29 @@
+{$IFNDEF WINAPI:DEBUG}
+  {$IFDEF HINTS}{$DEFINE !HAD_HINTS}{$HINTS-}{$ENDIF}
+{$ENDIF}
+
+{$include_once winTypes.pas}
+{$include_once winObjects.pas}
+{$include_once winIO.pas}
+{$include_once winWindow.pas}
+{$include_once winBitmap.pas}
+{$include_once winSysinfo.pas}
+{$include_once winProcess.pas}
+{$include_once winMemory.pas}
+
+// helper method
+{$IFNDECL GetHandle}
+function GetHandle(Str: String): HWND; overload;
+var proc:TSysProc;
+begin
+  for proc in GetProcesses() do
+    if Pos(Str, proc.Title) then Exit(Handle(proc.Handle));
+end;
+
+function GetClientHandle(): HWND; overload;
+begin
+  Result := client.GetIOManager.GetImageTarget().GetHandle();
+end;
+{$ENDIF}
+
+{$IFDEF !HAD_HINTS}{$HINTS+}{$ENDIF}

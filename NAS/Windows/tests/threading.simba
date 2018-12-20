@@ -1,0 +1,40 @@
+program new;
+{$DEFINE THREADED_MML}
+{$I Windows/Threading.simba}
+
+procedure MyThread(argz:Pointer);
+var
+  TPA: TPointArray;
+begin
+  while Random(10) <> 0 do
+  begin
+    FindColorsTolerance(TPA, $000000, 0,0,100,100, 0);
+    WriteLn(Length(TPA));
+    Sleep(100);
+  end;
+end;
+
+procedure MyTimerMethod();
+begin
+  WriteLn(GetTimeRunning());
+  Sleep(Random(0,70));
+end;
+
+
+var
+  thread: TLapeThread;
+  timer: TLapeTimer;
+begin
+  WriteLn('--| STARTING THREAD |--------------------');
+  thread := TLapeThread.Create(@MyThread, nil);
+  thread.Execute();
+  wait(1000);
+  thread.WaitFree();
+
+  WriteLn('--| STARTING TIMER |---------------------');
+  timer := TLapeTimer.Create(@MyTimerMethod, 100);
+  timer.Start();
+  wait(1000);
+  timer.Terminate();
+end;
+

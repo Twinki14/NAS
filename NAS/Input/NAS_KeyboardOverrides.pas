@@ -44,8 +44,8 @@ begin
     end;
 end;   
 
-procedure SendKeys(const s: string; keywait, keymodwait: integer); override;
-begin SendKeysEx(s, keywait); end;
+//procedure SendKeys(const S: String; KeyWait, KeyModWait: Int32); override;
+//begin SendKeysEx(s, keywait); end;
 
 (*
   Notes:

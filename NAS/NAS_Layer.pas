@@ -1,4 +1,4 @@
-{$loadlib liblayer.dll}
+{$loadlib ../Includes/NAS/Libs/liblayer.dll}
 
 var
   __SyncInfo: record
@@ -59,11 +59,6 @@ end;
 procedure TLayer.Paint;
 begin
   Self.Window.Paint();
-end;
-
-procedure TLayer.OnClick(Method: TLayerClickEvent);
-begin
-  Self.Window.OnClick(Method);
 end;
 
 procedure TLayer.PaintInterval(Interval: Int32);
