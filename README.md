@@ -50,7 +50,7 @@ end.
 
 ## Drawing
 NAS uses [LibLayer](https://github.com/Olly-/libLayer/tree/1.2) to draw on the paired NXT Game Window.
-LibLayer now comes with NAS.
+LibLayer now comes with NAS, just use the example below to use it.
 ```pascal
 program new;
 {$DEFINE NAS_DRAWING}
