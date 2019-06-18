@@ -44,6 +44,10 @@ begin
     end;
 end;   
 
+procedure SendKeys(const text: string; keywait, keymodwait: integer); override;
+begin SendKeysEx(text, keywait); end;
+
+(*
 {$IFDEF SIMBAJAJOR1200}
 procedure SendKeys(const text: string; keywait, keymodwait: integer); override;
 begin SendKeysEx(text, keywait); end;
@@ -51,6 +55,7 @@ begin SendKeysEx(text, keywait); end;
   procedure SendKeys(text: string; keywait, keymodwait: integer); override;
   begin SendKeysEx(text, keywait); end;
 {$ENDIF}
+*)
 
 (*
   Notes:
