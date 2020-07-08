@@ -48,7 +48,7 @@ end.
 ```
 
 ## Drawing
-You can use Ollys [WindowOverlay]([WindowOverlay](https://github.com/ollydev/WindowOverlay)) Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
+You can use Ollys [WindowOverlay](https://github.com/ollydev/WindowOverlay)Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
 
 ```pascal
 program new;
