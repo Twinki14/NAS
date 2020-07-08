@@ -31,10 +31,7 @@ The NXT Game Window will continue to run in the background, though you may not b
 ## Simba Input Function Overrides
 NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be found in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes
 
-## Requires [whatever ollys latest simba version is at](https://github.com/ollydev/Simba/releases)  
-
-&nbsp;  
-
+## Requires [whatever ollys latest simba version is at](https://github.com/ollydev/Simba/releases)&nbsp;  
 ## Setup
 NAS uses the official NXT Client, so just boot NXT up and start the script
 
