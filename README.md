@@ -12,10 +12,12 @@
 ## Why?
 Something similar to SMART but for the NXT Client was needed.
 
-## How it works
-NAS uses the Win32 API to do everything it does. It uses PostMessage to send fake input to the 'Paired' NXT Game Client. 
-Currently NAS disables the ability to minimize the paired NXT client at all, but still allows you to use your Host PC and bot without issues. 
-The NXT Game Window will continue to run in the background, though you may not be able to minimize it, you can still focus on other programs like games, your browser, or whatever it may be, and use those programs without interfering with the client.
+## How?
+NAS uses the Win32 API to do everything it does. It uses PostMessage to send fake input to the 'Paired' NXT Game Client
+
+Currently NAS disables the ability to minimize the paired NXT client at all, but still allows you to use your Host PC and bot without issues
+
+The NXT Game Window will continue to run in the background, though you may not be able to minimize it, you can still focus on other programs like games, your browser, or whatever it may be, and use those programs without interfering with the client
 
 ## The Include
 
@@ -27,13 +29,13 @@ The NXT Game Window will continue to run in the background, though you may not b
 
 
 ## Simba Input Function Overrides
-NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be found in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes.
+NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be found in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes
 
 ## Requires [whatever ollys latest simba version is at](https://github.com/ollydev/Simba/releases)
 
 
 ## Setup
-NAS uses the official NXT Client, so just boot NXT up and start the script. 
+NAS uses the official NXT Client, so just boot NXT up and start the script
 
 The NXT Client must be set to **Compatibility Mode** if you want Color-finding functions to work! It's normal for the client to lag until it fully loads the shaders
 
@@ -48,7 +50,7 @@ end.
 ```
 
 ## Drawing
-You can use Olly's [WindowOverlay](https://github.com/ollydev/WindowOverlay)Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
+You can use Olly's [WindowOverlay](https://github.com/ollydev/WindowOverlay) Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
 
 ```pascal
 program new;
