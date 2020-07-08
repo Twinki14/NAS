@@ -31,10 +31,6 @@ type TNAS = record
   _INI: TNASINI;
   Mouse: TNASMouse;
   Keyboard: TNASKeyboard;
-  {$IFDEF NAS_DRAWING}
-    Layer: TLayer;
-    Drawing: TMufasaBitmap;
-  {$ENDIF}
   z_debug: boolean;
 end;
 

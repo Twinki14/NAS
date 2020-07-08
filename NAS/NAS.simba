@@ -3,10 +3,6 @@
 {$Include_Once NAS\Windows\winWindow.pas}
 {$Include_Once NAS\Windows\winObjects.pas}
 
-{$IFDEF NAS_DRAWING}
-  {$I NAS\NAS_Layer.pas}
-{$ENDIF}
-
 {$I NAS\NAS_Types.pas}
 {$I NAS\NAS_Pair.pas}
 {$I NAS\NAS_INI.pas}
@@ -186,11 +182,6 @@ begin
   if(result) then
   begin
     SetTarget(['', self.getCurrentPair.GameWindow, self.getCurrentPair.NXT_PID, self.getCurrentPair.bounds.X2, self.getCurrentPair.bounds.Y2]);
-    {$IFDEF NAS_DRAWING}
-    self.Layer:=TLayer.Create(self.getCurrentPair.GameWindow);
-    self.Drawing:=self.Layer.Bitmap;
-    self.debug('Drawing > Initiated');
-    {$ENDIF}
   end
   else
     self.debug('ERROR > Could not create Pair with NXT Client! Enable Debug (NAS.EnableDebug()) for further details', true);

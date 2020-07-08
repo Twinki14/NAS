@@ -48,16 +48,6 @@ procedure SendKeys(const text: string; keywait, keymodwait: integer); override;
 begin SendKeysEx(text, keywait); end;
 
 (*
-{$IFDEF SIMBAJAJOR1200}
-procedure SendKeys(const text: string; keywait, keymodwait: integer); override;
-begin SendKeysEx(text, keywait); end;
-{$ELSE}
-  procedure SendKeys(text: string; keywait, keymodwait: integer); override;
-  begin SendKeysEx(text, keywait); end;
-{$ENDIF}
-*)
-
-(*
   Notes:
     Because Simba grabs the keystate system-wide, and NAS doesn't emulate a keyboard,
     it's best to simply return false, and assume the key isn't down.
