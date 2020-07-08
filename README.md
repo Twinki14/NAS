@@ -48,7 +48,7 @@ end.
 ```
 
 ## Drawing
-You can use Ollys [WindowOverlay](https://github.com/ollydev/WindowOverlay)Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
+You can use Olly's [WindowOverlay](https://github.com/ollydev/WindowOverlay)Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
 
 ```pascal
 program new;
@@ -62,7 +62,8 @@ begin
   NAS.EnableDebug();
   if (NAS.init()) then
   begin
-    Overlay := TWindowOverlay.Create(); // `TargetWindow` not specified. Will Simba's current target.
+    // `TargetWindow` not specified. Will use Simba's current target
+    Overlay := TWindowOverlay.Create(); // by this point the current Simba target should be the NXT client, set by NAS.init()
     AddOnTerminate(@Overlay.Free);
 
     // Overlay.Bitmap is a TMufasaBitmap, let's draw a red rectangle.
