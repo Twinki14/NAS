@@ -2,13 +2,12 @@
 * NXT and Simba Client Pairing
 * Send Fake Input to the NXT client with or without focus
 * Allows you to use your Host PC while botting
-* Works with SRL-6
-* Drawing [(Using LibLayer)](https://github.com/Olly-/libLayer/tree/1.2)
+* Works with any include for NXT
+* Supports drawing with [WindowOverlay](https://github.com/ollydev/WindowOverlay)
 
 
 ## What it doesn't do
 * Filter Bot/User Input
-* Work on Non-Windows' systems
 
 ## Why?
 Something similar to SMART but for the NXT Client was needed.
@@ -30,7 +29,7 @@ The NXT Game Window will continue to run in the background, though you may not b
 ## Simba Input Function Overrides
 NAS overrides almost all of Simba's mouse/keyboard functions, like KeyDown, KeyUp, MoveMouse, all of which can be found in Mouse/Keyboard Overrides.pas This is to maintain compatibility between includes.
 
-## Requires [Simba 1.2 - Simba.i386-win32.exe](http://nala.villavu.com/downloads/master/05a0dc6397ebfbf77d10eae153e58a5050678f87/) or [Simba 1.3+ - Simba.i386-win32.exe](https://github.com/MerlijnWajer/Simba/releases)
+## Requires [whatever ollys latest simba version is at](https://github.com/ollydev/Simba/releases)
 
 
 ## Setup
@@ -49,26 +48,25 @@ end.
 ```
 
 ## Drawing
-NAS uses [LibLayer](https://github.com/Olly-/libLayer/tree/1.2) to draw on the paired NXT Game Window.
-LibLayer now comes with NAS, just use the example below to use it.
+You can use Ollys [WindowOverlay]([WindowOverlay](https://github.com/ollydev/WindowOverlay)) Simba plugin to draw on external targets, be sure to create the overlay **after** ```NAS.init()```
+
 ```pascal
 program new;
-{$DEFINE NAS_DRAWING}
 {$I NAS\NAS.simba}
+{$loadlib libwindowoverlay}
 
+var
+  Overlay: TWindowOverlay;
 
 begin
-  ClearDebug();
   NAS.EnableDebug();
-
-  if(NAS.init()) then
+  if (NAS.init()) then
   begin
-    NAS.Layer.PaintInterval(100); 
-    // Layer supports auto-painting, or you can manually tell it to paint with NAS.Layer.Paint();
-    NAS.Drawing.DrawText('Clarity is bae', 'SmallChars07', Point(100, 100), false, 255);
-  end;
+    Overlay := TWindowOverlay.Create(); // `TargetWindow` not specified. Will Simba's current target.
+    AddOnTerminate(@Overlay.Free);
 
-  repeat
-  until false;
-end.  
+    // Overlay.Bitmap is a TMufasaBitmap, let's draw a red rectangle.
+    Overlay.Bitmap.Rectangle([100, 100, 200, 200], 255);
+  end
+end.
 ```
